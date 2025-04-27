@@ -3,7 +3,7 @@ export interface User {
     name: string;
     email: string;
     password: string;
-    opt?: string;
-    optExpiry?: number;
+    otp?: string;
+    otpExpiry?: number;
     isVerified?: boolean;
 }
