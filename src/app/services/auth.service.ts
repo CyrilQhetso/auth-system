@@ -77,7 +77,7 @@ export class AuthService {
       tap(updatedUser => {
         console.log(`OTP sent to user: ${otp}`);
         this.snackbar.open(`OTP sent to user: ${otp}`, 'Close', {
-          duration: 3000
+          duration: 10000
         });
       }),
       catchError(error => throwError(() => error))

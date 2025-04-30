@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { OptVerificationComponent } from './components/opt-verification/opt-verification.component';
+import { OtpVerificationComponent } from './components/otp-verification/otp-verification.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,8 +16,8 @@ import { HttpClientModule } from '@angular/common/http';
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    OptVerificationComponent,
-    DashboardComponent
+    DashboardComponent,
+    OtpVerificationComponent
   ],
   imports: [
     BrowserModule,
