@@ -1,0 +1,71 @@
+<div class="otp-container">
+    <div class="card">
+        <div class="card-header">
+            <h2>
+            {{ mode === 'verify' ? 'Verify Your Account' :
+                mode === 'reset' ? 'Reset Password' :
+                'Two-Factor Authentication' }}
+            </h2>
+        </div>
+        
+        <div class="card-body">
+            <div class="alert alert-info">
+            {{ mode === 'verify' ? 'An OTP has been sent to your email address for verification.' :
+                mode === 'reset' ? 'Enter the OTP sent to your email to reset your password.' :
+                'Enter the OTP sent to your email to complete login.' }}
+            </div>
+            
+            <!-- Display OTP section - new addition -->
+            <div *ngIf="currentOtp" class="otp-display-container">
+                <div class="alert alert-success">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Your OTP Code:</strong> <span class="otp-code">{{ currentOtp }}</span>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-sm btn-outline-success mr-2" (click)="copyOtpToClipboard()">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-primary" (click)="fillOtp()">
+                                <i class="fas fa-arrow-down"></i> Auto-fill
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <form [formGroup]="otpForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" formControlName="email" class="form-control" id="email"
+                [ngClass]="{ 'is-invalid': submitted && f['email'].errors }">
+                <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                <div *ngIf="f['email'].errors['required']">Email is required</div>
+                <div *ngIf="f['email'].errors['email']">Enter a valid email address</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="otp">OTP Code</label>
+                <input type="text" formControlName="otp" class="form-control" id="otp"
+                [ngClass]="{ 'is-invalid': submitted && f['otp'].errors }">
+                <div *ngIf="submitted && f['otp'].errors" class="invalid-feedback">
+                <div *ngIf="f['otp'].errors['required']">OTP is required</div>
+                <div *ngIf="f['otp'].errors['pattern']">OTP must be 6 digits</div>
+                </div>
+                <small class="form-text text-muted">Enter the 6-digit code sent to your email</small>
+            </div>
+            
+            <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+            
+            <div class="form-actions">
+                <button [disabled]="loading" class="btn btn-primary">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Verify
+                </button>
+                <button type="button" class="btn btn-link" (click)="resendOtp()">Resend OTP</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>

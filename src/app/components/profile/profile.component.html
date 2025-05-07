@@ -1,0 +1,115 @@
+<div class="profile-container" [ngClass]="currentUser?.theme || 'light'">
+    <div class="card">
+        <div class="card-header">
+            <h2>User Profile</h2>
+            <button *ngIf="!editMode" class="btn btn-primary" (click)="toggleEditMode()">Edit Profile</button>
+        </div>
+        
+        <div class="card-body">
+            <div *ngIf="!editMode" class="profile-info">
+            <div class="profile-image">
+                <img [src]="currentUser?.profileImage || 'assets/default-avatar.png'" alt="Profile Image">
+            </div>
+            
+            <div class="profile-details">
+                <h3>{{ currentUser?.name }}</h3>
+                <p class="email">{{ currentUser?.email }}</p>
+                <p class="bio">{{ currentUser?.bio || 'No bio available' }}</p>
+                
+                <div class="user-meta">
+                <p><strong>Member since:</strong> {{ currentUser?.createdAt | date }}</p>
+                <p><strong>Last login:</strong> {{ currentUser?.lastLogin | date:'medium' }}</p>
+                <p><strong>Account type:</strong> {{ currentUser?.role || 'user' }}</p>
+                </div>
+            </div>
+            </div>
+            
+            <form *ngIf="editMode" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="profileImage">Profile Image</label>
+                <div class="profile-image-upload">
+                <img [src]="profileForm.get('profileImage')?.value || 'assets/default-avatar.png'" alt="Profile Image">
+                <input type="file" id="profileImage" (change)="uploadProfileImage($event)" accept="image/*">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" formControlName="name" class="form-control"
+                [ngClass]="{'is-invalid': profileForm.get('name')?.invalid && profileForm.get('name')?.touched}">
+                <div class="invalid-feedback" *ngIf="profileForm.get('name')?.invalid && profileForm.get('name')?.touched">
+                Name is required
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" formControlName="email" class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label for="bio">Bio</label>
+                <textarea id="bio" formControlName="bio" class="form-control" rows="4"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Theme Preference</label>
+                <div class="theme-options">
+                <div class="theme-option" [class.selected]="profileForm.get('theme')?.value === 'light'">
+                    <input type="radio" id="light" formControlName="theme" value="light">
+                    <label for="light">Light</label>
+                </div>
+                <div class="theme-option" [class.selected]="profileForm.get('theme')?.value === 'dark'">
+                    <input type="radio" id="dark" formControlName="theme" value="dark">
+                    <label for="dark">Dark</label>
+                </div>
+                <div class="theme-option" [class.selected]="profileForm.get('theme')?.value === 'system'">
+                    <input type="radio" id="system" formControlName="theme" value="system">
+                    <label for="system">System</label>
+                </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Two-Factor Authentication</label>
+                <div class="toggle-container">
+                    <label class="switch">
+                        <input type="checkbox" [checked]="currentUser?.twoFactorEnabled" (change)="toggleTwoFactor($event)">
+                        <span class="slider round"></span>
+                    </label>
+                    <span>{{ currentUser?.twoFactorEnabled ? 'Enabled' : 'Disabled' }}</span>
+                </div>
+                <small class="form-text text-muted">
+                    When enabled, you'll need to enter an OTP every time you log in, even after password verification.
+                </small>
+            </div>
+            
+            <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+            <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid || loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Save Changes
+                </button>
+                <button type="button" class="btn btn-secondary" (click)="toggleEditMode()">Cancel</button>
+            </div>
+            </form>
+        </div>
+        
+        <div class="card-footer">
+            <div class="theme-switcher">
+                <span>Quick Theme Switch:</span>
+                <button class="theme-btn light" (click)="changeTheme('light')" [class.active]="currentUser?.theme === 'light'">Light</button>
+                <button class="theme-btn dark" (click)="changeTheme('dark')" [class.active]="currentUser?.theme === 'dark'">Dark</button>
+                <button class="theme-btn system" (click)="changeTheme('system')" [class.active]="currentUser?.theme === 'system'">System</button>
+            </div>
+
+            <div class="go-back" style="margin-left: auto;">
+                <button class="btn btn-outline-primary" routerLink="/dashboard">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
